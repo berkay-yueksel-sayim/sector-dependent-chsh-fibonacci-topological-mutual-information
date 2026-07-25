@@ -1,0 +1,461 @@
+{
+  "parameters": {
+    "L": 16,
+    "betas": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "n_therm": 2000,
+    "n_meas": 4000,
+    "n_shuffle": 2000,
+    "seeds": [
+      42,
+      10,
+      11,
+      12,
+      13
+    ],
+    "n_bins": 20,
+    "route": "independent (deposited z2_vec engine + np.unique MI)"
+  },
+  "per_beta": {
+    "1.0": {
+      "per_seed": {
+        "42": {
+          "settings": [
+            1,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.0679999999999998,
+          "I_full": 0.003321,
+          "sigma_full": 0.96,
+          "I_wilson": 0.001489,
+          "sigma_wilson": 2.21,
+          "I_anyons": 0.000286,
+          "sigma_anyons": -0.7,
+          "anyons_mean": 29.9
+        },
+        "10": {
+          "settings": [
+            1,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.056,
+          "I_full": 0.001555,
+          "sigma_full": -0.75,
+          "I_wilson": 0.000439,
+          "sigma_wilson": -0.2,
+          "I_anyons": 0.000219,
+          "sigma_anyons": -0.42,
+          "anyons_mean": 29.95
+        },
+        "11": {
+          "settings": [
+            3,
+            1,
+            1,
+            3
+          ],
+          "S_best": 1.035,
+          "I_full": 0.003713,
+          "sigma_full": 0.78,
+          "I_wilson": 0.000409,
+          "sigma_wilson": -0.3,
+          "I_anyons": 0.000629,
+          "sigma_anyons": 0.05,
+          "anyons_mean": 29.95
+        },
+        "12": {
+          "settings": [
+            3,
+            0,
+            1,
+            3
+          ],
+          "S_best": 1.069,
+          "I_full": 0.003544,
+          "sigma_full": 1.13,
+          "I_wilson": 0.000349,
+          "sigma_wilson": -0.44,
+          "I_anyons": 0.001222,
+          "sigma_anyons": 1.43,
+          "anyons_mean": 30.09
+        },
+        "13": {
+          "settings": [
+            3,
+            1,
+            1,
+            0
+          ],
+          "S_best": 1.053,
+          "I_full": 0.001818,
+          "sigma_full": -0.89,
+          "I_wilson": 0.000539,
+          "sigma_wilson": -0.05,
+          "I_anyons": 0.000313,
+          "sigma_anyons": -0.63,
+          "anyons_mean": 29.99
+        }
+      },
+      "I_full_mean": 0.00279,
+      "I_wilson_mean": 0.000645,
+      "I_anyons_mean": 0.000534
+    },
+    "1.5": {
+      "per_seed": {
+        "42": {
+          "settings": [
+            1,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.047,
+          "I_full": 0.005496,
+          "sigma_full": -0.88,
+          "I_wilson": 0.000337,
+          "sigma_wilson": -0.45,
+          "I_anyons": 0.002532,
+          "sigma_anyons": 1.15,
+          "anyons_mean": 11.58
+        },
+        "10": {
+          "settings": [
+            2,
+            3,
+            0,
+            1
+          ],
+          "S_best": 1.063,
+          "I_full": 0.006133,
+          "sigma_full": -0.65,
+          "I_wilson": 0.00024,
+          "sigma_wilson": -0.68,
+          "I_anyons": 0.001352,
+          "sigma_anyons": -0.42,
+          "anyons_mean": 11.84
+        },
+        "11": {
+          "settings": [
+            3,
+            0,
+            0,
+            1
+          ],
+          "S_best": 1.056,
+          "I_full": 0.008091,
+          "sigma_full": 0.67,
+          "I_wilson": 0.002064,
+          "sigma_wilson": 3.67,
+          "I_anyons": 0.001481,
+          "sigma_anyons": -0.19,
+          "anyons_mean": 11.56
+        },
+        "12": {
+          "settings": [
+            3,
+            2,
+            2,
+            1
+          ],
+          "S_best": 1.067,
+          "I_full": 0.007252,
+          "sigma_full": -0.0,
+          "I_wilson": 0.000764,
+          "sigma_wilson": 0.5,
+          "I_anyons": 0.001609,
+          "sigma_anyons": -0.03,
+          "anyons_mean": 11.4
+        },
+        "13": {
+          "settings": [
+            3,
+            0,
+            0,
+            1
+          ],
+          "S_best": 1.045,
+          "I_full": 0.007132,
+          "sigma_full": 0.3,
+          "I_wilson": 0.000683,
+          "sigma_wilson": 0.31,
+          "I_anyons": 0.000528,
+          "sigma_anyons": -1.48,
+          "anyons_mean": 11.91
+        }
+      },
+      "I_full_mean": 0.006821,
+      "I_wilson_mean": 0.000818,
+      "I_anyons_mean": 0.0015
+    },
+    "2.0": {
+      "per_seed": {
+        "42": {
+          "settings": [
+            3,
+            1,
+            1,
+            3
+          ],
+          "S_best": 1.1210000000000002,
+          "I_full": 0.013702,
+          "sigma_full": 6.68,
+          "I_wilson": 0.000143,
+          "sigma_wilson": -0.91,
+          "I_anyons": 0.009887,
+          "sigma_anyons": 12.63,
+          "anyons_mean": 4.83
+        },
+        "10": {
+          "settings": [
+            0,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.072,
+          "I_full": 0.008161,
+          "sigma_full": 2.76,
+          "I_wilson": 0.000861,
+          "sigma_wilson": 0.77,
+          "I_anyons": 0.0027,
+          "sigma_anyons": 2.5,
+          "anyons_mean": 4.22
+        },
+        "11": {
+          "settings": [
+            0,
+            3,
+            2,
+            1
+          ],
+          "S_best": 1.081,
+          "I_full": 0.006159,
+          "sigma_full": 0.4,
+          "I_wilson": 0.000328,
+          "sigma_wilson": -0.43,
+          "I_anyons": 0.002511,
+          "sigma_anyons": 1.37,
+          "anyons_mean": 4.36
+        },
+        "12": {
+          "settings": [
+            0,
+            3,
+            1,
+            3
+          ],
+          "S_best": 1.03,
+          "I_full": 0.003327,
+          "sigma_full": -0.28,
+          "I_wilson": 0.000212,
+          "sigma_wilson": -0.74,
+          "I_anyons": 0.001501,
+          "sigma_anyons": 1.05,
+          "anyons_mean": 4.55
+        },
+        "13": {
+          "settings": [
+            3,
+            0,
+            1,
+            2
+          ],
+          "S_best": 1.1280000000000001,
+          "I_full": 0.010377,
+          "sigma_full": 4.57,
+          "I_wilson": 0.000937,
+          "sigma_wilson": 0.92,
+          "I_anyons": 0.00648,
+          "sigma_anyons": 7.77,
+          "anyons_mean": 3.75
+        }
+      },
+      "I_full_mean": 0.008345,
+      "I_wilson_mean": 0.000496,
+      "I_anyons_mean": 0.004616
+    },
+    "2.5": {
+      "per_seed": {
+        "42": {
+          "settings": [
+            0,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.805,
+          "I_full": 0.021314,
+          "sigma_full": 28.42,
+          "I_wilson": 0.011847,
+          "sigma_wilson": 23.22,
+          "I_anyons": 0.010255,
+          "sigma_anyons": 27.17,
+          "anyons_mean": 0.19
+        },
+        "10": {
+          "settings": [
+            3,
+            0,
+            1,
+            3
+          ],
+          "S_best": 1.363,
+          "I_full": 0.027663,
+          "sigma_full": 30.23,
+          "I_wilson": 0.008595,
+          "sigma_wilson": 18.92,
+          "I_anyons": 0.01924,
+          "sigma_anyons": 44.19,
+          "anyons_mean": 1.04
+        },
+        "11": {
+          "settings": [
+            3,
+            0,
+            2,
+            1
+          ],
+          "S_best": 1.412,
+          "I_full": 0.103234,
+          "sigma_full": 135.11,
+          "I_wilson": 0.09841,
+          "sigma_wilson": 216.01,
+          "I_anyons": 0.001545,
+          "sigma_anyons": 2.32,
+          "anyons_mean": 0.19
+        },
+        "12": {
+          "settings": [
+            1,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.4929999999999999,
+          "I_full": 0.074201,
+          "sigma_full": 79.87,
+          "I_wilson": 0.025312,
+          "sigma_wilson": 56.64,
+          "I_anyons": 0.022871,
+          "sigma_anyons": 55.71,
+          "anyons_mean": 0.81
+        },
+        "13": {
+          "settings": [
+            0,
+            3,
+            1,
+            2
+          ],
+          "S_best": 1.237,
+          "I_full": 0.003284,
+          "sigma_full": 1.84,
+          "I_wilson": 0.001791,
+          "sigma_wilson": 2.92,
+          "I_anyons": 0.000669,
+          "sigma_anyons": 0.75,
+          "anyons_mean": 2.15
+        }
+      },
+      "I_full_mean": 0.045939,
+      "I_wilson_mean": 0.029191,
+      "I_anyons_mean": 0.010916
+    },
+    "3.0": {
+      "per_seed": {
+        "42": {
+          "settings": [
+            1,
+            3,
+            2,
+            1
+          ],
+          "S_best": 1.9969999999999999,
+          "I_full": 0.005707,
+          "sigma_full": 14.75,
+          "I_wilson": 0.001253,
+          "sigma_wilson": 3.28,
+          "I_anyons": 0.00473,
+          "sigma_anyons": 27.08,
+          "anyons_mean": 0.03
+        },
+        "10": {
+          "settings": [
+            0,
+            3,
+            0,
+            1
+          ],
+          "S_best": 2.0,
+          "I_full": 0.0,
+          "sigma_full": 0.0,
+          "I_wilson": 0.0,
+          "sigma_wilson": 0.0,
+          "I_anyons": 0.0,
+          "sigma_anyons": 0.0,
+          "anyons_mean": 0.02
+        },
+        "11": {
+          "settings": [
+            1,
+            3,
+            3,
+            1
+          ],
+          "S_best": 1.9969999999999999,
+          "I_full": 0.00561,
+          "sigma_full": 16.21,
+          "I_wilson": 0.00561,
+          "sigma_wilson": 18.39,
+          "I_anyons": 0.005024,
+          "sigma_anyons": 34.98,
+          "anyons_mean": 0.02
+        },
+        "12": {
+          "settings": [
+            2,
+            3,
+            2,
+            1
+          ],
+          "S_best": 1.986,
+          "I_full": 0.01124,
+          "sigma_full": 24.59,
+          "I_wilson": 0.0055,
+          "sigma_wilson": 14.14,
+          "I_anyons": 0.008342,
+          "sigma_anyons": 56.1,
+          "anyons_mean": 0.04
+        },
+        "13": {
+          "settings": [
+            1,
+            3,
+            1,
+            3
+          ],
+          "S_best": 2.0,
+          "I_full": 0.0,
+          "sigma_full": 0.0,
+          "I_wilson": 0.0,
+          "sigma_wilson": 0.0,
+          "I_anyons": 0.0,
+          "sigma_anyons": 0.0,
+          "anyons_mean": 0.02
+        }
+      },
+      "I_full_mean": 0.004511,
+      "I_wilson_mean": 0.002473,
+      "I_anyons_mean": 0.003619
+    }
+  }
+}
