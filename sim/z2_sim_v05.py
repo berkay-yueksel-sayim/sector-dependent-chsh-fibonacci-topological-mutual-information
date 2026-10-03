@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-═══════════════════════════════════════════════════════════════
+===============================================================
 Z2 GAUGE THEORY — TORIC CODE SIMULATION v0.5
-Z2 Lattice Gauge Theory on L×L Torus
+Z2 Lattice Gauge Theory on LxL Torus
 Methodology: Same as v0.1–v0.4 + I1 analysis, new model.
-═══════════════════════════════════════════════════════════════
+===============================================================
 
-Model: H = -K Σ_p B_p, where B_p = Π_{e∈p} σ_e for σ_e ∈ {+1,-1}
+Model: H = -K Sigma_p B_p, where B_p = Pi_{e in p} sigma_e for sigma_e  in  {+1,-1}
        on edges of a square lattice with periodic boundary conditions.
 
-Topological sectors: Noncontractible Wilson loops W_x, W_y ∈ {+1,-1}
+Topological sectors: Noncontractible Wilson loops W_x, W_y  in  {+1,-1}
 Anyons: Plaquettes with B_p = -1 (come in pairs)
 Measurements: Wilson lines from detectors in different directions (gauge-fixed)
 """
@@ -18,13 +18,13 @@ import numpy as np
 from collections import defaultdict
 import time
 
-# ═══════════════════════════════════════════════════
+# ===================================================
 # Z2 GAUGE THEORY ENGINE
-# ═══════════════════════════════════════════════════
+# ===================================================
 
 class Z2GaugeTheory:
     """
-    Z2 lattice gauge theory on L×L torus.
+    Z2 lattice gauge theory on LxL torus.
     
     Edge layout:
       sigma_h[y, x] = horizontal edge from (y,x) to (y, x+1 mod L)
@@ -64,7 +64,7 @@ class Z2GaugeTheory:
                        self.sh[(y+1)%L,x] * self.sv[y,x])
                 bp2 = (self.sh[ym,x] * self.sv[ym,(x+1)%L] *
                        self.sh[y,x] * self.sv[ym,x])
-                dE = 2 * (bp1 + bp2)  # flipping sh → each B_p flips sign, ΔE = 2*B_old per plaq
+                dE = 2 * (bp1 + bp2)  # flipping sh -> each B_p flips sign, DeltaE = 2*B_old per plaq
                 if dE <= 0 or self.rng.random() < np.exp(-self.beta * dE):
                     self.sh[y, x] *= -1
 
@@ -99,7 +99,7 @@ class Z2GaugeTheory:
         B = self.plaquette_array()
         return list(zip(*np.where(B == -1)))
 
-    # ─── Gauge fixing ───
+    # --- Gauge fixing ---
     def gauge_fix_tree(self):
         """
         Fix maximal-tree gauge. After this, all edges in the spanning tree = +1.
@@ -136,7 +136,7 @@ class Z2GaugeTheory:
         sv[y, x] *= -1                     # down
         sv[(y - 1) % L, x] *= -1          # up
 
-    # ─── Measurements (on gauge-fixed config) ───
+    # --- Measurements (on gauge-fixed config) ---
     def wilson_line(self, sh, sv, y, x, direction, length):
         """
         Product of edges along a path from (y,x).
@@ -163,12 +163,12 @@ class Z2GaugeTheory:
     def measure_detector(self, sh, sv, y, x, path_len):
         """
         Measure 4 Wilson lines from detector in 4 directions.
-        Returns dict {direction: ±1}.
+        Returns dict {direction: +/-1}.
         """
         return {d: self.wilson_line(sh, sv, y, x, d, path_len)
                 for d in range(4)}
 
-    # ─── Gauge-invariant alternative: plaquette-path correlator ───
+    # --- Gauge-invariant alternative: plaquette-path correlator ---
     def plaquette_path_product(self, y_a, x_a, y_b, x_b, route='direct'):
         """
         Product of plaquettes along a strip from A to B.
@@ -199,9 +199,9 @@ class Z2GaugeTheory:
         return prod
 
 
-# ═══════════════════════════════════════════════════
+# ===================================================
 # SIMULATION
-# ═══════════════════════════════════════════════════
+# ===================================================
 
 def run_sim(L=16, beta=2.0, n_therm=2000, n_meas=4000, seed=42, verbose=True):
     """Main simulation loop."""
@@ -212,7 +212,7 @@ def run_sim(L=16, beta=2.0, n_therm=2000, n_meas=4000, seed=42, verbose=True):
     path_len = L // 4
 
     if verbose:
-        print(f"  L={L}, β={beta}, therm={n_therm}, meas={n_meas}, seed={seed}")
+        print(f"  L={L}, beta={beta}, therm={n_therm}, meas={n_meas}, seed={seed}")
         print(f"  Edges: {2*L*L}, Plaquettes: {L*L}")
         print(f"  Detectors: A={det_A}, B={det_B}, path_len={path_len}")
 
@@ -257,12 +257,12 @@ def run_sim(L=16, beta=2.0, n_therm=2000, n_meas=4000, seed=42, verbose=True):
     return data
 
 
-# ═══════════════════════════════════════════════════
+# ===================================================
 # ANALYSIS
-# ═══════════════════════════════════════════════════
+# ===================================================
 
 def correlation_matrix(data):
-    """4×4 correlation matrix C[dA, dB] = <A(dA)·B(dB)>."""
+    """4x4 correlation matrix C[dA, dB] = <A(dA)·B(dB)>."""
     C = np.zeros((4, 4))
     N = len(data)
     for i in range(4):
@@ -375,9 +375,9 @@ def conditional_stats(data, a1, a2, b1, b2):
     return by_sec, by_any
 
 
-# ═══════════════════════════════════════════════════
+# ===================================================
 # MAIN
-# ═══════════════════════════════════════════════════
+# ===================================================
 
 def main():
     print("=" * 65)
@@ -391,17 +391,17 @@ def main():
     n_meas = 4000
     seed = 42
 
-    # ─── Run main simulation ───
-    print(f"\n{'─'*65}")
+    # --- Run main simulation ---
+    print(f"\n{'-'*65}")
     print("1. MAIN SIMULATION")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
     data = run_sim(L, beta, n_therm, n_meas, seed)
 
-    # ─── Correlation matrix ───
-    print(f"\n{'─'*65}")
+    # --- Correlation matrix ---
+    print(f"\n{'-'*65}")
     print("2. CORRELATION MATRIX  C(dir_A, dir_B)")
     print("   Directions: 0=right, 1=up, 2=left, 3=down")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
     C = correlation_matrix(data)
 
     dirs = ['R', 'U', 'L', 'D']
@@ -419,12 +419,12 @@ def main():
     a1, a2, b1, b2 = combo
     print(f"\n  Best CHSH:  S = {S_best:+.4f}")
     print(f"  Settings:   a1={dirs[a1]}, a2={dirs[a2]}, b1={dirs[b1]}, b2={dirs[b2]}")
-    print(f"  Bell limit: 2.0  |  QM limit: 2√2 ≈ 2.828")
+    print(f"  Bell limit: 2.0  |  QM limit: 2sqrt2 ~ 2.828")
 
-    # ─── Sector statistics ───
-    print(f"\n{'─'*65}")
+    # --- Sector statistics ---
+    print(f"\n{'-'*65}")
     print("3. TOPOLOGICAL SECTOR STATISTICS")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
 
     sec_counts = defaultdict(int)
     anyon_list = []
@@ -438,7 +438,7 @@ def main():
         pct = sec_counts[k] / len(data) * 100
         print(f"    ({k[0]:+d}, {k[1]:+d}): {sec_counts[k]:5d}  ({pct:5.1f}%)")
 
-    print(f"\n  Anyons:  mean={anyon_arr.mean():.1f} ± {anyon_arr.std():.1f}"
+    print(f"\n  Anyons:  mean={anyon_arr.mean():.1f} +/- {anyon_arr.std():.1f}"
           f"   min={anyon_arr.min()}  max={anyon_arr.max()}")
 
     # Anyon pair histogram
@@ -447,17 +447,17 @@ def main():
         pair_bins[a // 2] += 1
     print(f"\n  Anyon-pair histogram:")
     for k in sorted(pair_bins.keys())[:12]:
-        bar = '█' * (pair_bins[k] * 40 // len(data))
+        bar = '#' * (pair_bins[k] * 40 // len(data))
         print(f"    {k:3d} pairs: {pair_bins[k]:5d}  {bar}")
 
-    # ─── Conditional statistics ───
-    print(f"\n{'─'*65}")
+    # --- Conditional statistics ---
+    print(f"\n{'-'*65}")
     print("4. CONDITIONAL STATISTICS  <S>(sector) and <S>(anyon_pairs)")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
 
     by_sec, by_any = conditional_stats(data, a1, a2, b1, b2)
 
-    print(f"\n  {'Sector':<14} {'N':>6}  {'<S>':>8}  {'±SEM':>7}")
+    print(f"\n  {'Sector':<14} {'N':>6}  {'<S>':>8}  {'+/-SEM':>7}")
     print(f"  {'-'*38}")
     for k in sorted(by_sec.keys()):
         v = by_sec[k]
@@ -466,7 +466,7 @@ def main():
         sem = np.std(v) / np.sqrt(n) if n > 1 else 0
         print(f"  ({k[0]:+d},{k[1]:+d})       {n:6d}  {m:+8.4f}  {sem:7.4f}")
 
-    print(f"\n  {'Pairs':>6}  {'N':>6}  {'<S>':>8}  {'±SEM':>7}")
+    print(f"\n  {'Pairs':>6}  {'N':>6}  {'<S>':>8}  {'+/-SEM':>7}")
     print(f"  {'-'*34}")
     trend_x, trend_y = [], []
     for k in sorted(by_any.keys()):
@@ -484,32 +484,32 @@ def main():
         trend_x = np.array(trend_x, dtype=float)
         trend_y = np.array(trend_y)
         r_corr = np.corrcoef(trend_x, trend_y)[0, 1]
-        direction = "↑pairs → ↑S" if r_corr > 0 else "↑pairs → ↓S"
-        print(f"\n  Trend (N≥20):  r = {r_corr:+.3f}  ({direction})")
+        direction = "^pairs -> ^S" if r_corr > 0 else "^pairs -> vS"
+        print(f"\n  Trend (N>=20):  r = {r_corr:+.3f}  ({direction})")
         print(f"  {'*** KEY: opposite of XY model if r > 0 ***' if r_corr > 0 else '  (same direction as XY model)'}")
 
-    # ─── Mutual Information ───
-    print(f"\n{'─'*65}")
+    # --- Mutual Information ---
+    print(f"\n{'-'*65}")
     print("5. MUTUAL INFORMATION  I(sector; S)")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
 
     mi = mutual_info(data, a1, a2, b1, b2, n_shuffle=2000, seed=seed)
 
     print(f"\n  I(sector; S) = {mi['I']:.6f} bits")
     print(f"  p-value      = {mi['p']:.4f}")
-    print(f"  σ above null = {mi['sigma']:.1f}σ")
-    print(f"  I_shuffle    = {mi['I_sh_mean']:.6f} ± {mi['I_sh_std']:.6f}")
+    print(f"  sigma above null = {mi['sigma']:.1f}sigma")
+    print(f"  I_shuffle    = {mi['I_sh_mean']:.6f} +/- {mi['I_sh_std']:.6f}")
     print(f"  H(sector)    = {mi['H_sec']:.3f} bits")
     print(f"  H(S)         = {mi['H_S']:.3f} bits")
     print(f"  N_sectors    = {mi['n_sec']}")
 
     sig = '***' if mi['sigma'] > 3 else '**' if mi['sigma'] > 2 else '*' if mi['sigma'] > 1.5 else ''
-    print(f"\n  Significance: {mi['sigma']:.1f}σ {sig}")
+    print(f"\n  Significance: {mi['sigma']:.1f}sigma {sig}")
 
-    # ─── Plaquette correlation ───
-    print(f"\n{'─'*65}")
+    # --- Plaquette correlation ---
+    print(f"\n{'-'*65}")
     print("6. GAUGE-INVARIANT: PLAQUETTE CORRELATION <B_pA · B_pB>")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
 
     bp_corr = np.mean([r['bpA'] * r['bpB'] for r in data])
     bp_A_mean = np.mean([r['bpA'] for r in data])
@@ -520,13 +520,13 @@ def main():
     print(f"  <B_pA·B_pB>  = {bp_corr:+.4f}")
     print(f"  Connected:     {bp_connected:+.6f}")
 
-    # ─── β SCAN ───
-    print(f"\n{'─'*65}")
-    print("7. BETA SCAN — Ordered ↔ Disordered transition")
-    print(f"{'─'*65}")
+    # --- beta SCAN ---
+    print(f"\n{'-'*65}")
+    print("7. BETA SCAN — Ordered <-> Disordered transition")
+    print(f"{'-'*65}")
 
     betas = [0.3, 0.5, 0.8, 1.0, 1.5, 2.0, 3.0, 5.0]
-    print(f"\n  {'β':>5}  {'<S>':>8}  {'max|S|':>8}  {'<any>':>7}  {'I(bits)':>9}  {'σ':>6}  {'trend_r':>8}")
+    print(f"\n  {'beta':>5}  {'<S>':>8}  {'max|S|':>8}  {'<any>':>7}  {'I(bits)':>9}  {'sigma':>6}  {'trend_r':>8}")
     print(f"  {'-'*62}")
 
     for b in betas:
@@ -552,22 +552,22 @@ def main():
         print(f"  {b:5.1f}  {np.mean(S_arr):+8.4f}  {S2:+8.4f}  {avg_any:7.1f}"
               f"  {mi2['I']:9.6f}  {mi2['sigma']:6.1f}  {tr:+8.3f}")
 
-    # ─── Comparison with XY v0.1 ───
-    print(f"\n{'─'*65}")
+    # --- Comparison with XY v0.1 ---
+    print(f"\n{'-'*65}")
     print("8. COMPARISON: Z2 GAUGE vs XY MODEL (v0.1)")
-    print(f"{'─'*65}")
+    print(f"{'-'*65}")
 
     print(f"""
   Property                  XY (v0.1)        Z2 Gauge (v0.5)
-  ─────────────────────────────────────────────────────────
-  Model                     Cont. spins      Discrete gauge ±1
+  ---------------------------------------------------------
+  Model                     Cont. spins      Discrete gauge +/-1
   Topological defects       Vortices          Plaquette anyons
   Sectors                   195 (wind.num.)  4 (Wx,Wy) + anyons
   Best CHSH |S|             0.55             {abs(S_best):.3f}
   I(sector;S)               0.0067 bits      {mi['I']:.4f} bits
-  I significance            5.8σ             {mi['sigma']:.1f}σ
-  Trend ↑topo → ?S          ↓S (r<0)         {'↑S (r>0)' if len(trend_x)>2 and r_corr>0 else '↓S (r<0)' if len(trend_x)>2 else '?'}
-  cos(θ) form               r=0.993          N/A (discrete dirs)
+  I significance            5.8sigma             {mi['sigma']:.1f}sigma
+  Trend ^topo -> ?S          vS (r<0)         {'^S (r>0)' if len(trend_x)>2 and r_corr>0 else 'vS (r<0)' if len(trend_x)>2 else '?'}
+  cos(theta) form               r=0.993          N/A (discrete dirs)
   Bell violated?            No               No (classical)
   """)
 

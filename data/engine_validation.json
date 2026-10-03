@@ -1,0 +1,77 @@
+{
+  "threshold_se": 2.0,
+  "seeds": [
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+  ],
+  "reference": "exact torus value with the parity constraint; tanh(beta) is the unconstrained limit and is not the right reference at L=16, beta>=2.5",
+  "cells": {
+    "L16_beta1.0": {
+      "exact": 0.7615941559557644,
+      "mean": 0.7613525390625,
+      "sem": 0.00020257030533214548,
+      "z": -1.1927557342041744,
+      "passes": true,
+      "counter_control_no_coin_flip": {
+        "mean": 0.7643109375,
+        "z": 14.21353079176977,
+        "fails_as_required": true
+      }
+    },
+    "L16_beta2.0": {
+      "exact": 0.9640337729542896,
+      "mean": 0.964303515625,
+      "sem": 0.000274506413420422,
+      "z": 0.9826461515029261,
+      "passes": true,
+      "counter_control_no_coin_flip": {
+        "mean": 0.9704085937499999,
+        "z": 4.26755966631632,
+        "fails_as_required": true
+      }
+    },
+    "L16_beta2.5": {
+      "exact": 0.9874437071754895,
+      "mean": 0.9875697265625,
+      "sem": 0.0002982163358987715,
+      "z": 0.42257707523201815,
+      "passes": true,
+      "counter_control_no_coin_flip": {
+        "mean": 0.9978390625,
+        "z": 18.731791673398117,
+        "fails_as_required": true
+      }
+    },
+    "L4_beta2.0": {
+      "exact": 0.9902288347751499,
+      "mean": 0.9904781250000001,
+      "sem": 0.00041207301964547,
+      "z": 0.6049661418374,
+      "passes": true,
+      "counter_control_no_coin_flip": {
+        "mean": 0.99731875,
+        "z": 52.58078910534007,
+        "fails_as_required": true
+      }
+    }
+  },
+  "passes": true
+}

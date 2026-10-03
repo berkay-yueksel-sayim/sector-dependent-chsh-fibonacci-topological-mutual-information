@@ -1,0 +1,114 @@
+{
+  "description": "Decomposition of the beta = 2.0 gauge-invariant strip measurement into the components of the sector label, and the seed aggregate of tau_int_anyons for all couplings.",
+  "source_record": "null_calibration_results_vecrep_v2.json",
+  "null_model": "circular shift, exhaustive over all offsets",
+  "beta": 2.0,
+  "seeds": [
+    42,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "components": {
+    "V": {
+      "I_raw_mean": 0.003114386731076026,
+      "corrected_mean": 0.0028174140281003275,
+      "ci95": [
+        0.0022982634513154495,
+        0.003331234499075838
+      ],
+      "sigma_circ_mean": 6.811239276109219,
+      "n_gt3sigma_circ": 19,
+      "n_seeds": 21
+    },
+    "wilson": {
+      "I_raw_mean": 0.0007140620530094295,
+      "corrected_mean": 3.278253726423278e-05,
+      "ci95": [
+        -0.00027563750819250475,
+        0.0004269852627436571
+      ],
+      "sigma_circ_mean": 0.06932732862321875,
+      "n_gt3sigma_circ": 2,
+      "n_seeds": 21
+    },
+    "anyons": {
+      "I_raw_mean": 0.019022640040706126,
+      "corrected_mean": 0.017414481959807,
+      "ci95": [
+        0.01608469075335081,
+        0.018837941166451905
+      ],
+      "sigma_circ_mean": 17.578616227510164,
+      "n_gt3sigma_circ": 21,
+      "n_seeds": 21
+    },
+    "full": {
+      "I_raw_mean": 0.023259702538909854,
+      "corrected_mean": 0.017257465836938317,
+      "ci95": [
+        0.015889396213472885,
+        0.018660999229081137
+      ],
+      "sigma_circ_mean": 10.472477806865939,
+      "n_gt3sigma_circ": 21,
+      "n_seeds": 21
+    }
+  },
+  "tau_int_anyons_aggregate": {
+    "1.0": {
+      "mean": 0.8986902137783952,
+      "n_seeds": 21,
+      "min": 0.8345515498938374,
+      "max": 0.9965033545123352
+    },
+    "1.5": {
+      "mean": 2.6698120736088264,
+      "n_seeds": 21,
+      "min": 2.244496875990402,
+      "max": 3.144033991719822
+    },
+    "2.0": {
+      "mean": 8.932965295723006,
+      "n_seeds": 21,
+      "min": 6.71694573951531,
+      "max": 12.675611375916281
+    },
+    "2.5": {
+      "mean": 34.203425302861255,
+      "n_seeds": 21,
+      "min": 19.991703676762988,
+      "max": 73.16438817049325
+    },
+    "3.0": {
+      "mean": 60.912072121073344,
+      "n_seeds": 21,
+      "min": 23.536722999812188,
+      "max": 121.91162158586505
+    }
+  },
+  "tau_definitions_at_beta_3.0": {
+    "tau_int_labels": 228.77037544570072,
+    "tau_wilson_joint_match": 223.5839505308285,
+    "tau_wilson_max_of_marginals": 243.8437783903445,
+    "tau_int_anyons": 60.912072121073344
+  },
+  "runtime_min": 1.4
+}

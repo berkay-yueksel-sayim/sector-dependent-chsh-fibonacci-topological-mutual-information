@@ -29,6 +29,13 @@ DET_A = (L // 4, L // 4)      # (4,4)
 DET_B = (3 * L // 4, 3 * L // 4)  # (12,12)
 PATH_LEN = L // 4              # 4
 
+# Significance threshold for the per-seed count reported in Paper 1a:
+# a seed counts as significant if its sigma is STRICTLY GREATER than this
+# value. This count reproduces the "21 of 21" of the original analysis
+# (footnote of tab:gauge_inv, and Table VII). Defined here, used once
+# below (count n_gt3).
+SIGNIFICANCE_THRESHOLD_SIGMA = 3
+
 
 class GaugeConfig:
     """Z2 gauge field on L x L torus. h[y,x] = edge (y,x)->(y,x+1); v[y,x] = edge (y,x)->(y+1,x)."""
@@ -157,7 +164,7 @@ def chsh_series(data, a1, a2, b1, b2):
 
 def mutual_info(data, a1, a2, b1, b2, n_shuffle=2000, seed=42):
     rng = np.random.default_rng(seed)
-    sectors = [(r['Wx'], r['Wy'], min(r['n_any'] // 2, 10)) for r in data]
+    sectors = [(r['Wx'], r['Wy'], min(r['n_anyons'] // 2, 10)) for r in data]
     S_vals = chsh_series(data, a1, a2, b1, b2)
     n_bins = 20
     edges = np.linspace(S_vals.min() - 0.01, S_vals.max() + 0.01, n_bins + 1)
@@ -202,7 +209,7 @@ def run_seed(seed):
         n_any = cfg.n_anyons(B)
         A = measure_all_directions(B, DET_A[0], DET_A[1], PATH_LEN)
         Bd = measure_all_directions(B, DET_B[0], DET_B[1], PATH_LEN)
-        data.append({'Wx': Wx, 'Wy': Wy, 'n_any': n_any, 'A': A, 'B': Bd})
+        data.append({'Wx': Wx, 'Wy': Wy, 'n_anyons': n_any, 'A': A, 'B': Bd})
     t_meas = time.time() - t0
 
     C = correlation_matrix(data, n_dir=N_DIRECTIONS)
@@ -217,7 +224,7 @@ def main():
     results = [run_seed(s) for s in SEEDS]
     Is = np.array([r['I'] for r in results])
     sigmas = np.array([r['sigma'] for r in results])
-    n_gt3 = int(np.sum(sigmas > 3))
+    n_gt3 = int(np.sum(sigmas > SIGNIFICANCE_THRESHOLD_SIGMA))
     I_mean = float(Is.mean())
     I_sem = float(Is.std(ddof=1) / np.sqrt(len(Is)))
     sigma_mean = float(sigmas.mean())

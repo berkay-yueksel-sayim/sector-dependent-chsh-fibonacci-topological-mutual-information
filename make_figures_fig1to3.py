@@ -9,8 +9,10 @@ Usage: python make_figures_fig1to3.py
 
 Data provenance per panel (what is read vs. what is embedded in this file):
   fig1(a) crossover curves -- read at runtime from
-          data/crossover_decomposition_results.json (seed-set means of the
-          deposited validation script); no analysis values are hard-coded.
+          data/null_calibration_results_vecrep_v2.json (corrected engine,
+          21 seeds: seed means after subtracting the circular-shift null,
+          components.all_seeds.*.corrected_mean; mean anyon number from
+          aggregate_all_seeds.anyons_mean); no analysis values are hard-coded.
   fig1(b) per-seed box plot -- values embedded here; they are the per-seed
           entries of the paper's Table I, which has no separate result JSON.
   fig2    XY sector correlation -- computed in this script (deterministic
@@ -54,7 +56,7 @@ plt.rcParams.update({
     'axes.titlesize': 12,
     'figure.dpi': 300,
     'savefig.dpi': 300,
-    'savefig.bbox': 'tight',
+    'figure.constrained_layout.use': True,
     'axes.linewidth': 0.8,
 })
 
@@ -67,30 +69,38 @@ GRY = '#888888'
 # ============================================================
 # FIGURE 1: I vs beta + Seed Variation
 # ============================================================
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.2),
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.0, 3.0),
                                 gridspec_kw={'width_ratios': [1.2, 1]})
 
-# Crossover arrays from the deposited validation JSON (seed-set means,
-# data/crossover_decomposition_results.json) -- no hard-coded analysis values.
+# Decomposition arrays from the deposited per-seed JSON of the corrected engine
+# (data/null_calibration_results_vecrep_v2.json, 21 seeds, circular-shift null
+# subtracted; Table II of the paper) -- no hard-coded analysis values.
 import json as _json, os as _os
 with open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
-                        'data', 'crossover_decomposition_results.json'),
+                        'data', 'null_calibration_results_vecrep_v2.json'),
           encoding='utf-8') as _fh:
-    _cx = _json.load(_fh)
-betas = [float(b) for b in _cx['parameters']['betas']]
-_pb = [_cx['per_beta'][str(b)] for b in _cx['parameters']['betas']]
-_SEEDS = [str(s) for s in _cx['parameters']['seeds']]
-I_full   = [c['I_full_mean'] for c in _pb]
-I_wilson = [c['I_wilson_mean'] for c in _pb]
-I_anyons = [c['I_anyons_mean'] for c in _pb]
-# significance annotation: number of seeds with permutation sigma > 2.0
-nsig_full = [sum(1 for s in _SEEDS if c['per_seed'][s]['sigma_full'] > 2.0) for c in _pb]
-anyons_avg = [round(sum(c['per_seed'][s]['anyons_mean'] for s in _SEEDS) / len(_SEEDS), 1)
-              for c in _pb]
-# plotted-arrays == JSON assert (guards against silent drift)
-assert [round(v, 6) for v in I_full] == [c['I_full_mean'] for c in _pb]
-assert [round(v, 6) for v in I_wilson] == [c['I_wilson_mean'] for c in _pb]
-assert [round(v, 6) for v in I_anyons] == [c['I_anyons_mean'] for c in _pb]
+    _dec = _json.load(_fh)['decomposition']
+_BK = sorted(_dec, key=float)
+betas = [float(b) for b in _BK]
+_pb = [_dec[b] for b in _BK]
+_SEEDS = list(_pb[0]['per_seed'])
+assert len(_SEEDS) == 21 and all(set(c['per_seed']) == set(_SEEDS) for c in _pb)
+I_full   = [c['components']['all_seeds']['full']['corrected_mean'] for c in _pb]
+I_wilson = [c['components']['all_seeds']['wilson']['corrected_mean'] for c in _pb]
+I_anyons = [c['components']['all_seeds']['anyons']['corrected_mean'] for c in _pb]
+# significance annotation: number of seeds with circular-shift sigma > 3.0
+nsig_full = [sum(1 for s in _SEEDS if c['per_seed'][s]['full']['sigma_circ'] > 3.0) for c in _pb]
+anyons_avg = [round(c['aggregate_all_seeds']['anyons_mean'], 1) for c in _pb]
+# plotted arrays == JSON, recomputed from the per-seed values (guards against silent drift)
+for _k, _arr in (('full', I_full), ('wilson', I_wilson), ('anyons', I_anyons)):
+    for _c, _v in zip(_pb, _arr):
+        _ps = _c['per_seed']
+        _m = sum(_ps[s][_k]['I_raw'] - _ps[s][_k]['E_circ'] for s in _SEEDS) / len(_SEEDS)
+        assert abs(_m - _v) < 1e-12, (_k, _m, _v)
+        assert (sum(1 for s in _SEEDS if _ps[s][_k]['sigma_circ'] > 3.0)
+                == _c['components']['all_seeds'][_k]['n_gt3sigma_circ'])
+for _c, _a in zip(_pb, anyons_avg):
+    assert _a == round(sum(_c['per_seed'][s]['anyons_mean'] for s in _SEEDS) / len(_SEEDS), 1)
 
 ax1.semilogy(betas, [max(x, 1e-4) for x in I_full],
              'o-', color=ACC, lw=2, ms=7,
@@ -102,27 +112,23 @@ ax1.semilogy(betas, [max(x, 1e-4) for x in I_anyons],
              '^:', color=GRN, lw=1.5, ms=6,
              label=r'$I$(anyons only; $S$)', zorder=3)
 
-ax1.axvspan(1.8, 2.2, alpha=0.08, color=GLD)
-ax1.annotate('crossover', xy=(2.0, 0.003),
-             fontsize=8, ha='center', color=GLD, style='italic')
-
 ax1.set_xlabel(r'Inverse temperature $\beta$')
 ax1.set_ylabel('Mutual Information $I$ (bits)')
-ax1.set_ylim(5e-5, 0.05)   # max seed-set mean ~0.017
-ax1.set_xlim(0.8, 3.2)
-ax1.legend(fontsize=8, loc='upper left')
-ax1.set_title('(a) Information source crossover', fontsize=10)
+ax1.set_ylim(5e-5, 0.2)   # max seed mean ~0.050, room for the annotations
+ax1.set_xlim(0.8, 3.3)   # room for the annotation at beta = 3.0
+ax1.legend(fontsize=8, loc='upper left')   # lower left holds the clipped points
+ax1.set_title('(a) Components of the sector label', fontsize=10)
 ax1.grid(True, alpha=0.2)
 
 ax1t = ax1.twinx()
 ax1t.bar(betas, anyons_avg, width=0.12, alpha=0.2, color=GRY, zorder=1)
 ax1t.set_ylabel('Mean anyons', color=GRY, fontsize=9)
 ax1t.tick_params(axis='y', labelcolor=GRY, labelsize=8)
-ax1t.set_ylim(0, 25)
+ax1t.set_ylim(0, 50)   # max mean anyon number 30.5; bars stay below the legend
 
 for b, ns in zip(betas, nsig_full):
-    if ns >= 3:   # annotate only points significant in the majority of seeds
-        ax1.annotate(f'{ns}/5 seeds >2$\\sigma$', xy=(b, I_full[betas.index(b)]),
+    if ns > len(_SEEDS) // 2:   # annotate only points significant in the majority of seeds
+        ax1.annotate(f'{ns}/{len(_SEEDS)} >3$\\sigma$', xy=(b, I_full[betas.index(b)]),
                      xytext=(0, 10), textcoords='offset points',
                      fontsize=7, ha='center', color=ACC)
 
@@ -132,7 +138,7 @@ z2_seeds = [0.0397, 0.0176, 0.0178, 0.0099, 0.0301,
 xy_seeds = [0.00281, 0.00053, 0.00067, 0.00192, 0.00059,
             0.00074, 0.00058, 0.00042, 0.00146, 0.00170]
 
-np.random.seed(42)  # Reproduzierbarkeit fuer Scatter
+np.random.seed(42)  # Reproducibility for scatter
 bp = ax2.boxplot([xy_seeds, z2_seeds], positions=[1, 2], widths=0.5,
                   patch_artist=True, showmeans=True,
                   meanprops=dict(marker='D', markerfacecolor='white',
@@ -158,8 +164,8 @@ ax2.annotate('4/10 >2$\\sigma$', xy=(1, max(xy_seeds) * 1.05),
              fontsize=8, ha='center', color=RED)
 ax2.annotate('9/10 >2$\\sigma$', xy=(2, max(z2_seeds) * 1.05),
              fontsize=8, ha='center', color=GRN)
+ax2.set_ylim(top=max(max(z2_seeds), max(xy_seeds)) * 1.25)
 
-plt.tight_layout()
 _p1 = os.path.join(FIGDIR, 'fig1_crossover_seeds.png')
 plt.savefig(_p1, metadata={'Software': None})
 plt.close()
@@ -170,7 +176,7 @@ print("Figure 1 saved")
 # FIGURE 2: Delta-C per sector (XY Model)
 # ============================================================
 class XYModel:
-    """Minimales XY-Modell fuer Figure 2."""
+    """Minimal XY model for Figure 2."""
     def __init__(self, L, beta, seed):
         self.L = L
         self.beta = beta
@@ -224,7 +230,7 @@ for _ in range(8000):
 for k in C_soft:
     C_soft[k] /= N_sec[k]
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.0, 2.9))
 
 colors_n = {0: ACC, 1: RED, 2: GRN, 3: GLD}
 for n in [0, 1, 2]:
@@ -261,7 +267,6 @@ ax2.set_title('(b) Sector difference (topological signal)', fontsize=10)
 ax2.legend(fontsize=8)
 ax2.grid(True, alpha=0.2)
 
-plt.tight_layout()
 _p2 = os.path.join(FIGDIR, 'fig2_sector_correlation.png')
 plt.savefig(_p2, metadata={'Software': None})
 plt.close()
@@ -271,7 +276,7 @@ print("Figure 2 saved")
 # ============================================================
 # FIGURE 3: Simulation Overview (inkl. Fibonacci)
 # ============================================================
-fig, ax = plt.subplots(figsize=(10, 4.5))
+fig, ax = plt.subplots(figsize=(7.0, 3.2))
 
 versions = [
     'v0.1\nXY', 'v0.2\nXY+coup', 'v0.3\nXY+$\\rho$',
@@ -295,7 +300,7 @@ bars[-1].set_linewidth(1.5)
 # deposited systematic seed set (cf. Table II / crossover validation script).
 _IDX_B3 = 5
 ax.annotate('single run,\nnot reproduced', xy=(_IDX_B3, S_max[_IDX_B3]),
-            xytext=(0, 22), textcoords='offset points',
+            xytext=(0, 14), textcoords='offset points',
             fontsize=6.5, ha='center', va='bottom', style='italic',
             color=GRY, linespacing=0.95)
 
@@ -309,8 +314,8 @@ for i, (v, s) in enumerate(zip(versions, S_max)):
         ax.text(i, -0.15, f'$I$={I_vals[i]:.3f}', ha='center',
                 fontsize=6.5, color=GRY, style='italic')
 
-# Annotation fuer Fibonacci
-ax.annotate('99.4%\nTsirelson', xy=(9, 2.811), xytext=(9, 2.95),  # v1.6
+# Annotation for Fibonacci
+ax.annotate('99.4%\nTsirelson', xy=(9, 2.811), xytext=(7.75, 2.90),  # v1.7
             fontsize=7, ha='center', color='darkgreen', fontweight='bold',
             arrowprops=dict(arrowstyle='->', color='darkgreen', lw=1))
 
@@ -323,17 +328,16 @@ ax.set_xticks(range(len(versions)))
 ax.set_xticklabels(versions, fontsize=8)
 ax.set_ylabel('$|S|_\\mathrm{max}$')
 ax.set_title('Simulation History: Maximum CHSH Value per Model', fontsize=11)
-ax.legend(fontsize=8, loc='upper right')
-ax.set_ylim(-0.3, 3.1)
+ax.legend(fontsize=8, loc='upper left')
+ax.set_ylim(-0.3, 3.25)
 ax.grid(True, alpha=0.15, axis='y')
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
-plt.tight_layout()
 _p3 = os.path.join(FIGDIR, 'fig3_overview.png')
 plt.savefig(_p3, metadata={'Software': None})
 plt.close()
 clean_save(_p3, dpi=300)
 print("Figure 3 saved")
 
-print(f"\nAlle Figuren in {FIGDIR}/ gespeichert.")
+print(f"\nAll figures saved to {FIGDIR}/.")

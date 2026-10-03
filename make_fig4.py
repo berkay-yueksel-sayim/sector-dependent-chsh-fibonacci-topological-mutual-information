@@ -35,7 +35,9 @@ def main():
     fits = d["fits"]
     engines = [("v05", "o"), ("vec", "s")]        # per figure caption: v05=circles, vec=squares
     colors = {"M2": "tab:orange", "M2c": "tab:green", "Mexp": "tab:red"}
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    plt.rcParams.update({'font.size': 10, 'figure.dpi': 300, 'savefig.dpi': 300,
+                     'figure.constrained_layout.use': True})
+    fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.0))
     Lgrid = np.logspace(np.log10(7.5), np.log10(66), 400)
     for ax, (eng, marker) in zip(axes, engines):
         f = fits[eng]
@@ -49,21 +51,21 @@ def main():
             ax.plot(Lgrid, model(m, f[m]["params"], Lgrid),
                     color=colors[m], lw=lw, label=f"{m} (BIC={bic:.1f})",
                     zorder=3 if m == "Mexp" else 2)
-        ax.errorbar(Lv, yv, yerr=sem, fmt=marker, color="tab:blue", ms=9,
-                    capsize=4, elinewidth=1.4, mec="tab:blue", zorder=4,
+        ax.errorbar(Lv, yv, yerr=sem, fmt=marker, color="tab:blue", ms=6,
+                    capsize=3, elinewidth=1.2, mec="tab:blue", zorder=4,
                     label="Data (signal $-$ control)")
         ax.axhline(0, color="0.5", lw=0.8, zorder=1)
         ax.set_xscale("log")
         ax.set_yscale("symlog", linthresh=1e-4)
         ax.set_xlim(7.5, 66)
+        ax.set_xticks([8, 16, 32, 48, 64])
+        ax.set_xticklabels(["8", "16", "32", "48", "64"])
+        ax.xaxis.set_minor_formatter(plt.NullFormatter())
         ax.set_xlabel("$L$")
         ax.set_ylabel(r"$I_{\mathrm{corr}} - I_{\mathrm{scrambled}}$ (bits)")
         ax.set_title(f"Engine: {eng}")
-        ax.legend(loc="upper right", framealpha=0.9)
+        ax.legend(loc="lower left", framealpha=0.9, fontsize=8)
         ax.grid(True, which="both", ls=":", lw=0.5, alpha=0.5)
-    fig.suptitle(r"Finite-size scaling of $I(T;S)$ (signal above control level): "
-                 r"three pre-registered models, BIC comparison", y=0.99)
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
     OUT.parent.mkdir(exist_ok=True)
     # save @300 dpi, then strip metadata via a clean PIL re-save (no tEXt/Software)
     tmp = OUT.with_suffix(".raw.png")

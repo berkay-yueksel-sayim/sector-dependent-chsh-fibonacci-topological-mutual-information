@@ -42,13 +42,20 @@ import numpy as np
 # the Z2 engine ships alongside this script in the deposit (../sim/z2_sim_v05.py)
 ENGINE_PATH = Path(__file__).resolve().parent.parent / "sim" / "z2_sim_v05.py"
 
+# Significance threshold for the per-seed count reported in Paper 1a:
+# a seed counts as significant if its sigma is STRICTLY GREATER than this
+# value. This count reproduces the "21 of 21" of the original analysis
+# (footnote of tab:gauge_inv, and Table VII). Defined here, used once
+# below (count n_gt3).
+SIGNIFICANCE_THRESHOLD_SIGMA = 3
+
 spec = importlib.util.spec_from_file_location("z2_sim_v05", ENGINE_PATH)
 _engine = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(_engine)
 Z2GaugeTheory = _engine.Z2GaugeTheory
 
 
-# ── NEW: gauge-invariant plaquette-strip detector (mirrors wilson_line/measure_detector) ──
+# -- NEW: gauge-invariant plaquette-strip detector (mirrors wilson_line/measure_detector) --
 
 def plaquette_strip_product(B: np.ndarray, y: int, x: int, direction: int, length: int) -> int:
     """
@@ -166,8 +173,8 @@ def measure_detector_plaquette_vectorized(B: np.ndarray, y: int, x: int, path_le
     return out
 
 
-# ── Reused, UNMODIFIED analysis pipeline (transcribed verbatim from z2_sim_v05.py
-#    so it operates on our A_p/B_p dict fields instead of A/B; logic is untouched) ──
+# -- Reused, UNMODIFIED analysis pipeline (transcribed verbatim from z2_sim_v05.py
+#    so it operates on our A_p/B_p dict fields instead of A/B; logic is untouched) --
 
 def correlation_matrix(data, key_a, key_b, n_dir=4):
     C = np.zeros((n_dir, n_dir))
@@ -303,7 +310,7 @@ def main():
 
     Is = np.array([r['I'] for r in results])
     sigmas = np.array([r['sigma'] for r in results])
-    n_gt3 = int(np.sum(sigmas > 3))
+    n_gt3 = int(np.sum(sigmas > SIGNIFICANCE_THRESHOLD_SIGMA))
     total_mismatches = sum(r['cross_check_mismatches'] for r in results)
 
     summary = {

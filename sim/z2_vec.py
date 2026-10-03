@@ -62,7 +62,7 @@ class Z2GaugeVec:
         self._mask_odd = ~self._mask_even
 
     # ------------------------------------------------------------
-    # Plaketten
+    # Plaquettes
     # ------------------------------------------------------------
     def plaquette_array(self) -> np.ndarray:
         """B_p[y,x] = sh[y,x] * sv[y,(x+1)%L] * sh[(y+1)%L,x] * sv[y,x] (CCW)."""
@@ -80,15 +80,15 @@ class Z2GaugeVec:
     # Sweep (Metropolis, Checkerboard)
     # ------------------------------------------------------------
     def _update_h(self, mask: np.ndarray) -> None:
-        """Update alle horizontalen Edges, wo mask True ist."""
-        # Aktuelle Plakettenwerte (vor Flip)
+        """Update all horizontal edges where mask is True."""
+        # Current plaquette values (before flip)
         bp1 = (
             self.sh
             * np.roll(self.sv, -1, axis=1)
             * np.roll(self.sh, -1, axis=0)
             * self.sv
         )
-        # B_p at ((y-1)%L, x) - die "obere" Plakette dieses Edge
+        # B_p at ((y-1)%L, x) - the "upper" plaquette of this edge
         bp2 = (
             np.roll(self.sh, 1, axis=0)
             * np.roll(np.roll(self.sv, -1, axis=1), 1, axis=0)
@@ -96,22 +96,22 @@ class Z2GaugeVec:
             * np.roll(self.sv, 1, axis=0)
         )
         dE = 2.0 * (bp1 + bp2)
-        # Akzeptanz-Wahrscheinlichkeit: 1 wenn dE<=0, sonst exp(-beta*dE)
+        # Acceptance probability: 1 if dE<=0, else exp(-beta*dE)
         prob = np.where(dE <= 0, 1.0, np.exp(-self.beta * dE))
         rand = self.rng.random(size=(self.L, self.L))
         flip = mask & (rand < prob)
-        # In-place Flip ueber where (np.where erhaelt dtype)
+        # In-place flip via where (np.where preserves dtype)
         self.sh = np.where(flip, -self.sh, self.sh).astype(np.int8)
 
     def _update_v(self, mask: np.ndarray) -> None:
-        """Update alle vertikalen Edges, wo mask True ist."""
+        """Update all vertical edges where mask is True."""
         bp1 = (
             self.sh
             * np.roll(self.sv, -1, axis=1)
             * np.roll(self.sh, -1, axis=0)
             * self.sv
         )
-        # B_p at (y, (x-1)%L) - die "linke" Plakette dieses Edge
+        # B_p at (y, (x-1)%L) - the "left" plaquette of this edge
         bp2 = (
             np.roll(self.sh, 1, axis=1)
             * self.sv
